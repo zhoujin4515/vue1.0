@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app1">
+        <span>mesage: {{message}}</span>
+
+        <p>Using mustaches: {{ rawHtml }}</p>
+        <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+
+        <button v-bind:disabled="isButtonDisabled">Button</button>
+
+        <!--对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。-->
+        <div>{{ message.split('').reverse().join('') }}</div>
+        <!--指令 (Directives) 是带有 v- 前缀的特殊特性。指令特性的值预期是单个 JavaScript -->
+        <p v-if="seen">现在你看到我了</p>
+        <img v-bind:src="imgUrl" width="200px">
+
+
+    </div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    // 模板语法
+    var log = console.log.bind(console)
+    log('v-html 会改变元素子节点')
+    window.vm1 = new Vue({
+        el: '#app1',
+        data: {
+            // 文本
+            message: '这是一个信息',
+            // 原始HTML
+            rawHtml: '<span style="color: red">This should be red.</span>',
+            isButtonDisabled: true,
+            seen: true,
+            imgUrl: "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg",
+
+
+        }
+    })
+
+</script>
+</html>
