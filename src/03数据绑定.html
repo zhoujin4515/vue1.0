@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>数据绑定</title>
+</head>
+<body>
+<div id="root">
+
+</div>
+</body>
+<script>
+    const log = console.log.bind(console)
+    var app = new Vue({
+        template: `<div>
+                       {{ active ? 'active' : 'no active' }}
+                       <div>
+                        {{ html }}
+                       </div>
+                       <div v-html="html" v-bind:style='[style, style2]'></div>
+                   </div>
+                   `,
+        el: '#root',
+        data() {
+            return {
+                active: true,
+                html: '<span>123</span>',
+                style: {
+                    color: 'red',
+                },
+                style2: {
+                    border: 'solid 1px #eee',
+                    background: 'black',
+                }
+            }
+        },
+        computed
+        mounted() {
+            log(this, 'mounted')
+        },
+        renderError(h, err) {
+            log(err)
+            return h('div', {}, err.stack)
+        },
+
+    })
+</script>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app1">
+
+    </div>
+
+    <div id="app2">
+
+    </div>
+
+    <div id="app3">
+
+    </div>
+
+    <div id="app4">
+
+    </div>
+
+</body>
+<script>
+    // 全局组件
+    Vue.component('component-one', {
+        data() {
+            return {
+                count: 0,
+            }
+        },
+        template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+    })
+
+    Vue.component('blog-post', {
+        props: {
+            post: Object,
+            postFontSize: Number,
+        },
+
+        // 组件模板必须要有一个根元素
+        template: `<div class="blog-post">
+                        <button v-on:click="emit1()">放大</button>
+                        <h3>{{ post.title }}</h3>
+                        <div v-html="post.content"></div>
+                        <div v-html="post.auth"></div>
+                        </div>`,
+        methods: {
+            emit1: function () {
+                console.log(this)
+                this.$emit('big', 0.2)
+            },
+        }
+    })
+
+    Vue.component('custom-input', {
+        props: {
+          value: String,
+        },
+        template: `
+            <input  :value="value" v-on:input="cominput"/>
+        `,
+        methods: {
+            cominput($event) {
+                console.log(this)
+                console.log($event)
+                this.$emit('input', $event.target.value)
+            }
+        }
+    })
+
+    Vue.component('solt-input', {
+        props: {
+            value: Object,
+        },
+        data() {
+            return {
+                currentvalue: '',
+            }
+        },
+        watch: {
+            value (val) {
+                console.log(val)
+                this.currentvalue = val
+            },
+            currentvalue (newValue, oldValue) {
+                // console.log(newValue)
+                // this.value = newValue
+            }
+        },
+        created() {
+            //this.currentvalue = this.value
+            console.log(this)
+        },
+        template: `
+            <div>
+                <input v-model="value.a" />
+                <slot></slot>
+            </div>
+        `
+    })
+    let app1 = new Vue({
+        el: '#app1',
+        template: '<div>' +
+        '<component-one></component-one>' +
+        '<component-one></component-one>' +
+        '<component-one></component-one>' +
+        '</div>'
+    })
+
+    let app2 = new Vue({
+        el: '#app2',
+        data() {
+            return{
+                propsdata: [
+                      {
+                          title: '第一篇博文标题',
+                          content: '内容们',
+                          auth: '张三',
+                      },
+                      {
+                          title: '第二篇博文标题',
+                          content: '内容们',
+                          auth: '李四',
+                      },
+                      {
+                          title: '第三篇博文标题',
+                          content: '内容们',
+                          auth: '王五',
+                      }
+                ],
+                postFontSize: 1,
+            }
+        },
+        template: ` <div>
+                        <blog-post v-on:big="fun"  v-for="item in propsdata" :post="item" :style="'font-size:' + postFontSize + 'em'"></blog-post>
+                    </div> `,
+        methods: {
+            fun(arg) {
+                this.postFontSize += arg
+            }
+        }
+    })
+
+    let app3 = new Vue({
+        el: '#app3',
+        data() {
+          return {
+              text: '',
+          }
+        },
+        template: `
+            <div>
+                <custom-input v-model="text"/>
+                <div>{{ text }}</div>
+            </div>`
+
+    })
+
+    let app4 = new Vue({
+        el: '#app4',
+        data() {
+            return {
+                text: {
+                    a: ''
+                },
+            }
+        },
+        template: `
+            <div>
+                <solt-input :value="text">slot内容</solt-input>
+                <div> {{ text.a }} </div>
+            </div>`
+
+    })
+</script>
+</html>

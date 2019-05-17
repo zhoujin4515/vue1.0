@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <div id="root">
+
+  </div>
+</body>
+<script>
+    const log = console.log.bind(console)
+    var app = new Vue({
+        // template: `<div>{{ text }}</div>`,
+        el: '#root',
+        data() {
+            return {
+                text: 0,
+            }
+        },
+        beforeCreate() {
+            log(this, 'beforeCreate')
+        },
+        created() {
+            log(this, 'created')
+
+        },
+        beforeMount() {
+            log(this, 'beforeMount')
+
+        },
+        mounted() {
+            log(this, 'mounted')
+        },
+        beforeUpdate() {
+            log(this, 'beforeUpdate')
+        },
+        updated() {
+            log(this, 'updated')
+        },
+        // 挂载前运行
+        render(h) {
+            // h 是一个方法
+            // throw new TypeError('render error')
+            log('render function invoked')
+            return h('div', {}, this.text)
+        },
+        // 开发环境才会有, 当前组件render错误才会执行
+        renderError(h, err) {
+            log(err)
+            return h('div', {}, err.stack)
+        },
+        // 会向上冒泡，正式环境也会执行
+        errorCaptured(h, err) {
+            return h('span', {}, err.stack)
+        },
+
+    })
+</script>
+</html>

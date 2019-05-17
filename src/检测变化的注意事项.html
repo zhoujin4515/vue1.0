@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    window.app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                someProperty: {
+
+                },
+                a: 'aaaa',
+                property: '',
+                arr: [
+                    1, 2, 3, 4, 5,
+                ],
+                assignPro: {
+                    key1: '333333',
+                    key2: '3333333333',
+                },
+                someObject: null
+            }
+        },
+        mounted() {
+            console.log(this)
+            // 通过set Vue.set(object, propertyName, value) 方法向嵌套对象添加响应式属性。
+            this.$set(this.someProperty, 'property', '啦啦啦啦')
+            // 有时你可能需要为已有对象赋值多个新属性
+            Object.assign(this.assignPro, {a: '222', b: '666'})
+            setTimeout(()=> {
+                this.someObject = Object.assign({}, this.someObject, { a: 'someO.a', b: 2 })
+
+            },100   )
+            this.property  = '嘟嘟嘟嘟'
+        },
+        template:`
+            <div>ddddd{{ someProperty.property }}
+            <span>{{a}}</span>
+            <div v-for="item in arr">{{item}}</div>
+            <div>{{assignPro.key2}}</div>
+             <div>{{assignPro.a}}</div>
+                <div v-if="someObject">{{someObject.a}}</div>
+            </div>
+        `
+    })
+
+    window.app.b = 'bbbbb'
+</script>
+</html>

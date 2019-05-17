@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>局部组件</h1>
+    <div id="app"></div>
+
+    <h1>inheritAttrs: false 和 $attrs</h1>
+    <div id="app1"></div>
+
+    <h1>自定义事件的v-model</h1>
+    <div id="app2"></div>
+
+
+    <div id="app3"></div>
+
+</body>
+<script>
+    // 全局组件
+    let componentA = Vue.component('component-a',{
+        template: `<div>组件A</div>`
+    })
+    let componentB = Vue.component('component-b',{
+        template: `<div>组件B</div>`
+    })
+    // 局部组件
+    let componentMy = {
+        name: 'component-C',
+        template: `<div>组件C</div>`
+    }
+
+    let app = new Vue({
+        el: '#app',
+        components: {
+            componentMy,
+        },
+        template: `
+            <div>
+                <component-a></component-a>
+                <component-b></component-b>
+                <component-my></component-my>
+            </div>
+        `
+    })
+
+    // 有了 inheritAttrs: false 和 $attrs，你就可以手动决定这些特性会被赋予哪个元素。在撰写基础组件的时候是常会用到的：
+    let baseInput = {
+        inheritAttrs: false,
+        props: {
+            lable: String,
+            value: String,
+        },
+        template: `
+            <lable>
+                {{ lable }}
+                <input
+                    :value="value"
+                    @input="$emit('input', $event.target.value)"
+                    v-bind="$attrs"
+                />
+            </lable>
+        `
+
+    }
+
+    let app1 = new Vue({
+        el: '#app1',
+        components: {
+            baseInput,
+        },
+        data() {
+            return {
+                text: ''
+            }
+        },
+        template: `
+            <div>
+                <base-input
+                    v-model="text"
+                    lable="lable信息"
+                    required
+                    placeholder="enter you task"
+                ></base-input>
+                <div>{{ text }}</div>
+            </div>
+        `
+    })
+
+    // 自定义事件的v-model
+    let baseChecker = {
+        model: {
+            prop: 'checked',
+            event: 'change',
+        },
+        props: {
+            checked: Boolean,
+        },
+        template: `
+            <input
+                type="checkbox"
+                :checked="checked"
+                @change="$emit('change', $event.target.checked)"
+            />
+        `
+    }
+
+    let app2 = new Vue({
+        el: '#app2',
+        data() {
+            return{
+                checked: false,
+            }
+        },
+        components: {
+          baseChecker,
+        },
+        template: `
+            <div>
+                <base-checker v-model="checked"></base-checker>
+                <div>{{ checked }}</div>
+            </div>
+        `
+    })
+
+    // 将原生事件绑定到组件
+    let nativeInput = {
+        inheritAttrs: false,
+        props: {
+            label: String,
+            value: String,
+        },
+        created() {
+          console.log(this.listenerList)
+        },
+        computed: {
+            listenerList() {
+                let vm = this
+                return Object.assign({},
+                    // 我们从父级添加所有的监听器
+                    this.$listeners,
+                    // 然后我们添加自定义监听器，
+                    // 或覆写一些监听器的行为
+                    {
+                        // 这里确保组件配合 `v-model` 的工作
+                        input: function (event) {
+                            console.log('dddd')
+                            vm.$emit('input', event.target.value)
+                        }
+                    }
+                )
+            }
+        },
+        template: `<label>{{ label }}
+                        <input v-on="listenerList"/>
+                    </label>`,
+    }
+    var appNative = new Vue({
+        el: '#app3',
+        components: {
+            nativeInput,
+        },
+        data() {
+            return {
+                count: 0,
+            }
+        },
+        template: `
+<div>
+            <native-input v-model="count" :label="'嘟嘟嘟'" @focus="count++" @click="count += 5"></native-input>
+        <div>{{ count }}</div>
+     </div>   `
+    })
+
+
+</script>
+</html>

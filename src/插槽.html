@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app1">
+    <div>
+        <nav-link :url="url" :str="str">
+            <!--百度一下-->
+            <!--{{ str }}-->
+        </nav-link>
+    </div>
+</div>
+<div id="app2"></div>
+<div id="app3"></div>
+
+
+</body>
+<script>
+    let navLink = {
+        props: {
+            url: String,
+            str: String,
+        },
+        template: `
+                <div>
+                    <a :href="url" class="nav-link" :data-child="str">
+                        <div>{{ str }}</div>
+                    </a>
+                    <!--<slot></slot>-->
+                </div>
+        `
+    }
+
+    let app1 = new Vue({
+        el: '#app1',
+        components: {
+            navLink,
+        },
+        data() {
+            return {
+                url: 'http://www.baidu.com',
+                str: '父组件给子组件的string'
+            }
+        }
+
+    })
+
+    let currentUser = {
+        data() {
+            return {
+                user: {
+                    lastName: '李四',
+                    firstName: '張三',
+                }
+            }
+        },
+        template: `
+                <span>
+                    <slot name="user" :user="user">{{ user.lastName }}</slot>
+                </span>
+        `
+    }
+
+    let app2 = new Vue({
+        el: '#app2',
+        components: {
+            currentUser,
+        },
+        data() {
+
+        },
+        template: `
+            <current-user v-slot:user="userProp">
+                {{ userProp.user.firstName }}
+            </current-user>
+        `
+    })
+</script>
+</html>

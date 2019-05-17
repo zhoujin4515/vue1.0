@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    const log = console.log.bind(console)
+    // 触发当前实例上的事件。附加参数都会传给监听器回调。
+    const welcomeBtn = {
+        template: `<button @click="$emit('welcome', '参数')">click welcome Button</button>`
+    }
+    const app = new Vue({
+        components: {
+            welcomeBtn
+        },
+        data() {
+            return{
+                text: 0
+            }
+        },
+        // 监听welcome-btn实例上的自定义welcome事件， 回调函数为sayHi
+        template: `<div>{{text}}
+                        <welcome-btn v-on:welcome="sayHi"></welcome-btn>
+                        <div v-on:clickHandle="clickdiv">一个div</div>
+                    </div>`,
+        methods: {
+            sayHi(arg) {
+                alert('hi'+arg)
+            },
+            clickdiv(arg) {
+                alert('div' + arg)
+            }
+        }
+    })
+
+    /**
+    *   如果 Vue 实例在实例化时没有收到 el 选项，则它处于“未挂载”状态，没有关联的 DOM 元素。
+    *   可以使用 vm.$mount() 手动地挂载一个未挂载的实例。
+    * */
+    app.$mount('#app')
+
+    /**
+    *  监听当前实例上的自定义事件。事件可以由vm.$emit触发。
+    *  回调函数会接收所有传入事件触发函数的额外参数。
+    * */
+    app.$on('funName', (arg1)=> {
+        log('这是一个回调函数, 参数是' + arg1)
+    })
+
+    app.$emit('funName', 200)
+    // 对一个原生dom绑定的自定义事件无用
+    app.$emit('clickHandle', '用$emit 触发实例上的事件')
+
+    console.log(app)
+</script>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>动态组件</title>
+</head>
+<body>
+<div id="app">
+    <template>
+        <button @click="clickTab(1)">1</button>
+        <button @click="clickTab(2)">2</button>
+        <button @click="clickTab(3)">3</button>
+        <component v-bind:is="index"></component>
+    </template>
+</div>
+
+</body>
+<script>
+    let commponentA = {
+        template: `<div>commponentA</div>`
+    }
+    let commponentB = {
+        template: `<div>commponentB</div>`
+    }
+    let commponentC = {
+        template: `<div>commponentC</div>`
+    }
+
+    let app = new Vue({
+        el: '#app',
+        components: {
+          commponentA, commponentB, commponentC
+        },
+        data() {
+            return {
+                index: commponentA,
+            }
+        },
+        methods: {
+            clickTab(index) {
+                console.log(index)
+
+                if (index === 1) {
+                    this.index = commponentA
+                } else if (index === 2) {
+                    this.index = commponentB
+                } else if (index === 3) {
+                    this.index = commponentC
+                }
+                console.log(this.index)
+            }
+        },
+        mounted() {
+            // console.log(this.index)
+        }
+    })
+</script>
+</html>
